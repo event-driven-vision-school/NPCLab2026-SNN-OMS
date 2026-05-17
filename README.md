@@ -5,7 +5,7 @@
 
 This tutorial series is part of the teaching activities of the [**Neuroinspired Perception and Cognition (NPC) Lab**](https://giuliadangelo.github.io/html/npclab.html) at the 
 **Department of Cybernetics, Faculty of Electrical Engineering, Czech Technical University 
-in Prague**, led by [Assistant Professor Giulia D'Angelo](https://www.giuliadangelo.com/). 
+in Prague**, led by [Assistant Professor Giulia D'Angelo](https://giuliadangelo.github.io/). 
 It introduces students to the computational principles of spiking neurons, 
 the fundamental building blocks of neuromorphic computing and brain-inspired 
 artificial intelligence.
