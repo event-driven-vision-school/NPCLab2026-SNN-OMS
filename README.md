@@ -1,4 +1,6 @@
 
+# NPC Lab for the Event-Driven Vision School 2026 
+
 ### Neuro-inspired Perception and Cognition (NPC) Lab — Czech Technical University in Prague
 
 This tutorial series is part of the teaching activities of the [**Neuroinspired Perception and Cognition (NPC) Lab**](https://giuliadangelo.github.io/html/npclab.html) at the 
@@ -14,7 +16,7 @@ These tutorials are designed and developed by the NPC Lab team:
 - Paolo Ritirato (paolo.ritirato@fel.cvut.cz) (PhD student)
 
 
-## 📖 Introduction
+## Introduction
 
 The brain processes information through electrical impulses 
 called **spikes** or **action potentials**. 
@@ -38,7 +40,7 @@ inspired **Object Motion Sensitivity (OMS)** SNN model.
 
 ---
 
-## 🗂️ Tutorial Overview
+## Tutorial Overview
 
 ```
 Tutorial 1A    LIF neuron — membrane dynamics and spike generation
@@ -50,7 +52,7 @@ Tutorial 4     Object Motion Sensitivity (OMS) model
 
 ---
 
-## 📋 Getting Started
+## Getting Started
 
 ```bash
 1. Clone the repository
@@ -73,7 +75,7 @@ python Tutorial1A-LIFNeuron.py
 
 ---
 
-## 🧬 Tutorial 1A — The Leaky Integrate-and-Fire Neuron
+## Tutorial 1A — The Leaky Integrate-and-Fire Neuron
 
 **Script:** [`Tutorial1-LIFNeuron.py`](Tutorial1-LIFneuron.py)
 
@@ -136,7 +138,7 @@ print(f"Minimum input current required to reach threshold: {I_min:.2f} uA")
 ```
 ---
 
-## ⏱️ Tutorial 2 — The LIF Neuron with Refractory Period
+## Tutorial 2 — The LIF Neuron with Refractory Period
 
 **Script:** [`Tutorial2-NeuronRefractory`](Tutorial2-NeuronRefractory.py)
 
@@ -183,7 +185,7 @@ print(f"Difference in firing rates: {firing_rate[-1] - firing_rate_r[-1]} spikes
 3. Can you find a current value where the refractory period prevents additional spikes that would otherwise occur?
 
 
-## 🔗 Tutorial 3A — Spiking Neural Networks (Brian2)
+## Tutorial 3A — Spiking Neural Networks (Brian2)
 
 **Script:** [`Tutorial3A-SNN.py`](Tutorial3A-SNN.py)
 
@@ -212,7 +214,7 @@ tau = 50.0 ms
 3. What is the relationship between `v0` and firing rate — is it linear?
 
 
-## 🔗 Tutorial 3B — Spiking Neural Networks (Brian2)
+## Tutorial 3B — Spiking Neural Networks (Brian2)
 
 **Script:** [`Tutorial3B-SNN.py`](Tutorial3B-SNN.py)
 
@@ -308,18 +310,23 @@ Vary the parameters in `OMS_PARAMS` (threshold, kernel sizes, sigma values) and 
 2. How does the choice of `threshold` affect the OMS output — what happens at very low or very high values?
 3. Which `OMS_PARAMS` have the most impact on segmentation quality and why?
 
-
-
 ---
 
-## 📚 References
+## Bonus — Live Demo: OMS on Neuromorphic Hardware
 
-1. Gerstner, W., & Kistler, W. (2002). *Spiking Neuron Models*. Cambridge University Press.
-2. Mahowald, M., & Douglas, R. (1991). A silicon neuron. *Nature*, 354, 515–518.
-3. Brette, R., & Gerstner, W. (2005). Adaptive exponential integrate-and-fire model. *Journal of Neurophysiology*, 94(5), 3637–3642.
-4. D'Angelo, G., et al. (2026). A benchmarking framework for embodied neuromorphic agents. *Nature Machine Intelligence*. DOI: 10.1038/s42256-026-01197-w.
+For a live demonstration of the OMS pipeline deployed on the
+**SynSense Speck2f** neuromorphic chip, see the companion repository:
 
----
+[github.com/GiuliaDAngelo/Speckegomotion](https://github.com/GiuliaDAngelo/Speckegomotion)
+
+This demo is directly connected to [D'Angelo et al., 2025](https://doi.org/10.1088/2634-4386/addc90) and shows the full OMS, visual attention and control pipeline running in real time on neuromorphic hardware with event-based eye movements under two conditions:
+
+- **Microsaccades** — small continuous jitter movements around a fixed position, producing a steady stream of events even in a static scene
+- **Saccades** — large ballistic jumps to random positions, alternating between dense event bursts and complete silence
+
+The two conditions reveal how eye movement strategy shapes the output of the OMS network on-chip.
+
+
 
 *NPC Lab — Czech Technical University in Prague | Faculty of Electrical Engineering | Department of Cybernetics*
 *Contact: [giulia.dangelo@fel.cvut.cz](mailto:giulia.dangelo@fel.cvut.cz)*
