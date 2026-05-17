@@ -326,7 +326,13 @@ This demo is directly connected to [D'Angelo et al., 2025](https://doi.org/10.10
 
 The two conditions reveal how eye movement strategy shapes the output of the OMS network on-chip.
 
+---
 
+## More Tutorials
+
+For more tutorials on event-driven sensing and neuromorphic computing, visit:
+
+[github.com/GiuliaDAngelo/CTU-EDNeuromorphic](https://github.com/GiuliaDAngelo/CTU-EDNeuromorphic)
 
 *NPC Lab — Czech Technical University in Prague | Faculty of Electrical Engineering | Department of Cybernetics*
 *Contact: [giulia.dangelo@fel.cvut.cz](mailto:giulia.dangelo@fel.cvut.cz)*
