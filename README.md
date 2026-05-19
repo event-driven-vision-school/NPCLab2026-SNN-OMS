@@ -43,12 +43,12 @@ inspired **Object Motion Sensitivity (OMS)** SNN model.
 ## Tutorial Overview
 
 ```
-Tutorial 1A    LIF neuron — membrane dynamics and spike generation
-Tutorial 2    LIF neuron with refractory period
-Tutorial 3     Spiking Neural Networks (Brian2)
+Tutorial 1     LIF neuron — membrane dynamics and spike generation
+Tutorial 2     LIF neuron with refractory period
+Tutorial 3A    Spiking Neural Networks -> spontaneous activity (Brian2)
+Tutorial 3B    Spiking Neural Networks -> signal propagation (Brian2)
 Tutorial 4     Object Motion Sensitivity (OMS) model
 ```
-
 
 ---
 
@@ -102,18 +102,13 @@ If V ≥ V_threshold  →  spike emitted, V reset to V_rest
 
 | Parameter | Symbol | Typical Value | Description |
 |---|---|---|---|
-| Membrane capacitance | `Cm` | 100 pF | Capacity to store charge |
-| Leak conductance | `gL` | 10 nS | Rate of passive voltage decay |
-| Resting potential | `V_rest` | −70 mV | Equilibrium in absence of input |
-| Threshold | `V_th` | −50 mV | Voltage at which a spike is emitted |
-| Reset potential | `V_reset` | −70 mV | Voltage after spike |
+| Membrane capacitance | `Cm` | 0.74 | Capacity to store charge |
+| Leak conductance | `gL` | 0.1 | Rate of passive voltage decay |
+| Resting potential | `VL` | −65 mV | Equilibrium in absence of input |
+| Threshold | `VT` | −50 mV | Voltage at which a spike is emitted |
+| Reset potential | `VR` | −67 mV | Voltage after spike |
 | Membrane time constant | `τ_m` | `Cm / gL` | Timescale of integration and leak |
 
-### Questions
-
-1. Find the minimal constant current $I_{min}$ which causes the neuron to fire at least once. *(See Task 2 in the exercise above.)*
-2. How does changing the amplitude and duration of the input current pulses affect the firing behaviour? Try halving and doubling both values.
-3. What happens when you modify `Cm`, `gL`, or `V_th`? For each parameter, predict the effect before running the simulation, then verify. *(See Task 1 in the exercise above.)*
 
 ### Exercises
 
@@ -123,24 +118,27 @@ Modify the LIF parameters `Cm`, `gL`, or `VT` and observe how the membrane poten
 
 **Task 2 — Find the minimum firing current**
 
-Now consider a constant current $I_{ext}$ instead of the pulsed input. Find the minimal constant current $I_{min}$ which causes the neuron to fire at least once.
+Now consider the pulse current $I_{ext_{amp}}$. Find the minimal current $I_{ext_{amp}}$ which causes the neuron to fire at least once.
 
-The LIF equation under constant input is:
-
-$$\tau_m \frac{dV(t)}{dt} = (V_L - V(t)) + R_m \cdot I_{ext}$$
-
-> 💡 **Hint:** At steady state $\frac{dV}{dt} = 0$. The spiking condition is $V = V_T$. Solve for $I_{ext}$.
+> **Hint:** Increase $I_{ext_{amp}}$ until the neuron fires.
 
 ```python
-# TODO: solve for I_min here
 I_min = None
-print(f"Minimum input current required to reach threshold: {I_min:.2f} uA")
+if I_min is not None:
+    print(f"Minimum input current required to reach threshold: {I_min:.2f} uA")
 ```
+
+### Questions
+
+1. What is the minimal pulse current $I_{ext_{amp}}$ which causes the neuron to fire at least once?
+2. How does changing the amplitude and duration of the input current pulses (`pulse_duration`) affect the firing behaviour? Try halving and doubling both values.
+3. What happens when you modify `Cm`, `gL`, or `VT`? For each parameter, predict the effect before running the simulation, then verify.
+
 ---
 
 ## Tutorial 2 — The LIF Neuron with Refractory Period
 
-**Script:** [`Tutorial2-NeuronRefractory`](Tutorial2-NeuronRefractory.py)
+**Script:** [`Tutorial2-NeuronRefractory.py`](Tutorial2-NeuronRefractory.py)
 
 This tutorial extends the LIF model by introducing 
 the **refractory period**, the brief interval after a 
@@ -148,7 +146,7 @@ spike during which a neuron cannot fire again, regardless of input.
 This is a fundamental biological constraint that shapes neural 
 coding and network dynamics.
 
-> 💡 **Key concept:** After a spike, 
+> **Key concept:** After a spike, 
 > biological neurons enter a refractory
 > state due to ion channel dynamics. 
 > During the **absolute refractory period**, 
@@ -159,22 +157,27 @@ coding and network dynamics.
 
 **Task 1 — Observe the refractory period**
 
-Run the script and compare the membrane potential and spike trains of the neuron with and without refractory period. 
-What do you notice about the firing rate?
+Run the script and compare the membrane potential and spike trains of the neuron with and without refractory period (`t_ref = 2.0 ms`). What do you notice about the firing rate?
 
 **Task 2 — Explore the firing rate vs. input current**
 
-Adapt the code to feed the neuron a constant external 
-current $I_{ext}$. Use 10 equidistant values 
-from $[I_{min}, 18]\ \mu A$, where $I_{min}$ is your result from
-Tutorial 1. 
-For each current value, compute the firing rate 
-(spikes/sec) for both scenarios and plot them against $I_{ext}$.
+Adapt the code to feed the neuron a constant external current $I_{ext}$. Use 10 equidistant values from $[I_{min}, 18]\ \mu A$, where $I_{min}$ is your result from Tutorial 1. For each current value, compute the firing rate (spikes/sec) for both scenarios and plot them against $I_{ext}$.
+
+> **Hint:** Wrap the simulation in a `for` loop over `I_values = np.linspace(I_min, 18, 10)`. To simulate with constant current, replace the pulsed `I_ext` with `np.full_like(time, I_ext_amp)`. Then reuse the simulation loop from Task 1 twice, once without refractory and once with, and count the spikes for each run. Divide the spike count by `T / 1000` to get the firing rate in spikes/sec.
+
 
 ```python
-# TODO
+# TODO: set I_min from your result in Tutorial 1
+I_min = None
+
+# TODO: define 10 equidistant current values from I_min to 18
+I_values = None  # np.linspace(I_min, 18, 10)
+
+# TODO: for each current value simulate with and without refractory period
+#       and compute firing rate (spikes/sec) for both cases
 firing_rate = None
 firing_rate_r = None
+
 print(f"Difference in firing rates: {firing_rate[-1] - firing_rate_r[-1]} spikes/sec at I_ext = 18 uA.")
 ```
 
@@ -184,14 +187,13 @@ print(f"Difference in firing rates: {firing_rate[-1] - firing_rate_r[-1]} spikes
 2. How does increasing the refractory period duration $\tau_{ref}$ affect the maximum achievable firing rate?
 3. Can you find a current value where the refractory period prevents additional spikes that would otherwise occur?
 
-
 ## Tutorial 3A — Spiking Neural Networks (Brian2)
 
 **Script:** [`Tutorial3A-SNN.py`](Tutorial3A-SNN.py)
 
 This tutorial introduces **network-level** spiking dynamics using the **Brian2** simulator. A population of 100 independent LIF neurons is simulated, each with a different baseline membrane potential, and their spiking activity and firing rates are visualised.
 
-> 💡 **Key concept:** Some biological neurons fire spontaneously without external input — for example, brainstem neurons that drive breathing. This intrinsic excitability is modelled via the baseline membrane potential `v0`: the higher it is, the more often the neuron fires on its own.
+> **Key concept:** Some biological neurons fire spontaneously without external input — for example, brainstem neurons that drive breathing. This intrinsic excitability is modelled via the baseline membrane potential `v0`: the higher it is, the more often the neuron fires on its own.
 
 ### Exercise
 
@@ -201,45 +203,34 @@ Run the simulation and observe at which times each neuron fires and how the base
 
 Then adjust the `tau` parameter and observe how the activity changes for:
 
-```
-tau = 2.0 ms
-tau = 10.0 ms
-tau = 50.0 ms
+```python
+tau = 2.0 * ms
+tau = 10.0 * ms
+tau = 50.0 * ms
 ```
 
 ### Questions
 
 1. Which neurons fire most frequently and why?
 2. How does increasing `tau` affect the firing rate across the population?
-3. What is the relationship between `v0` and firing rate — is it linear?
-
+3. What is the relationship between `v0` and firing rate, is it linear?
 
 ## Tutorial 3B — Spiking Neural Networks (Brian2)
 
 **Script:** [`Tutorial3B-SNN.py`](Tutorial3B-SNN.py)
 
-This tutorial introduces **network-level** 
-spiking dynamics using the **Brian2** simulator. 
-A chain of 10 LIF neurons is connected via synapses, 
-and signal propagation is visualised in real time. 
-Only one neuron fires spontaneously, the rest respond only through synaptic input.
+This tutorial introduces **network-level** spiking dynamics using the **Brian2** simulator. A chain of 10 LIF neurons is connected via synapses, and signal propagation is visualised in real time. Only one neuron fires spontaneously — the rest respond only through synaptic input.
 
-> 💡 **Key concept:** Real neural computation emerges at 
-> the *network* level. This tutorial demonstrates how a 
-> spike initiated by a single neuron propagates through a
-> chain, and how synaptic strength, connection direction, 
-> and refractory period all shape that propagation.
+> **Key concept:** Real neural computation emerges at the *network* level. This tutorial demonstrates how a spike initiated by a single neuron propagates through a chain, and how synaptic strength, connection direction, and refractory period all shape that propagation.
 
-### Exercise
+### Exercises
 
 **Task 1 — Observe signal propagation**
 
-Run the script and observe how the spike initiated by the middle 
-neuron spreads in both directions along the chain. 
-Play with the `tau` parameter and observe how it influences the system.
+Run the script and observe how the spike initiated by the middle neuron spreads in both directions along the chain. Play with the `tau` parameter and observe how it influences the system.
 
 Then:
-- Set `tau = 10*ms`
+- Set `tau = 10 * ms`
 - Disable right-to-left connections by removing `S.connect(condition='j == i-1 and i > 0')`
 - Move the non-zero baseline potential to the **first neuron** instead of the middle one
 
@@ -247,20 +238,17 @@ How far does the signal travel? Which is the most distant neuron to spike?
 
 **Task 2 — Explore connection strength**
 
-With the unidirectional chain from Task 1, 
-explore weight values in the range $[0.9, 1.1]$. 
-How does spiking behaviour change?
+With the unidirectional chain from Task 1, explore weight values in the range $[0.9, 1.1]$. How does spiking behaviour change?
 
 **Task 3 — Explore the refractory period**
 
-Set weights back to `w = 1.0` and decrease the refractory period from `5*ms` down to `1*ms`. How far does the signal spread for `1*ms`?
+Set weights back to `w = 1.0` and decrease the refractory period from `5 * ms` down to `1 * ms`. How far does the signal spread for `1 * ms`?
 
 ### Questions
 
 1. How far does the signal travel when connections are unidirectional and the first neuron drives the chain?
 2. What happens to signal propagation when `w < 1.0`? And when `w > 1.0`?
-3. How far does the signal spread with a refractory period of `1*ms`?
-
+3. How far does the signal spread with a refractory period of `1 * ms`?
 
 ## Tutorial 4 — Object Motion Sensitivity (OMS)
 

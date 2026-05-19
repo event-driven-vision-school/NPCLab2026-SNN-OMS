@@ -6,10 +6,12 @@ Paolo Ritirato, paolo.ritirato@fel.cvut.cz
 
 ### Task 1: Refractory period
 """
-In the visualisation of task 0, you may have noticed that after the spike, the neuron is immediately ready to spike again. However, in biological neurons 
-this is not possible. There is the so-called refractory period, time required to establish ion equillibrium within the cell again, during which no firing is possible. 
-In the following example refractory period of tau_ref = 2.0 ms is implemented.   
-Run the script and observe the effect of the refractory period on the firing rate. 
+In the visualisation of Tutorial 1, you may have noticed that after the spike, 
+the neuron is immediately ready to spike again. However, in biological neurons 
+this is not possible. There is the so-called refractory period, the time required 
+to re-establish ion equilibrium within the cell, during which no firing is possible.
+In the following example a refractory period of t_ref = 2.0 ms is implemented.
+Run the script and observe the effect of the refractory period on the firing rate.
 """
 
 import numpy as np
@@ -38,10 +40,11 @@ ref_count = 0
 
 # Define input current
 I_ext_amp = 5.0
+pulse_duration = 10
 I_ext = np.zeros_like(time)
 pulse_times = [5, 60]
 for t in pulse_times:
-    I_ext[int(t/dt):int((t+10)/dt)] = I_ext_amp
+    I_ext[int(t/dt):int((t+pulse_duration)/dt)] = I_ext_amp
 
 # Initialize membrane potentials
 V = np.zeros_like(time)
@@ -144,3 +147,39 @@ for i in range(1, len(time)):
 plt.ioff()
 plt.show(block=True)
 
+
+### Task 2: Explore the firing rate
+"""
+Let's keep the constant driving current and observe how the current amplitude 
+influences the firing rate of the neuron. The firing rate is defined as: 
+num_spikes / sec.
+
+Adapt the above code to feed the neuron a constant external current I_ext.
+For I_ext use 10 equidistant values from interval [I_min, 18], where I_min is 
+your result from Tutorial 1 Task 2.
+Keep the original time parameters (simulation duration etc.).
+For each driving current, collect the number of produced spikes for both 
+no-refractory-period and with-refractory-period scenarios and finally use 
+{num_spikes} / {total_simulation_time[sec]} to get the per-second firing rates.
+
+Plot both the no-refractory-period and with-refractory-period firing rates 
+in respect to input current amplitude I_ext.
+
+What is the difference in the spike rates with and without refractory period 
+for I_ext = 18 uA?
+"""
+
+# TODO: set I_min from your result in Tutorial 1
+I_min = None  # replace with your value from Tutorial 1
+
+# TODO: define 10 equidistant current values from I_min to 18
+I_values = None  # np.linspace(I_min, 18, 10)
+
+# TODO: for each current value in I_values, simulate the neuron with and without
+#       refractory period and compute the firing rate (spikes/sec) for both cases
+firing_rate = None
+firing_rate_r = None
+
+# TODO: plot firing_rate and firing_rate_r against I_values
+
+print(f"Difference in Firing rates: {firing_rate[-1] - firing_rate_r[-1]} spikes/sec at I_ext = 18 uA.")

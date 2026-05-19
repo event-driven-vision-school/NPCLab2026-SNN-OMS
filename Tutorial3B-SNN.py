@@ -1,29 +1,36 @@
-'''
+"""
 Giulia D'Angelo, giulia.dangelo@fel.cvut.cz
 Sarka Liskova, sarka.liskova@fel.cvut.cz
 Paolo Ritirato, paolo.ritirato@fel.cvut.cz
 
 Task 1: Adding connections
-The previous network consisted of independent neurons with spontaneous spiking. Now we will add connections and make only one of the neurons spike spontaneously.
-We will form a chain of 10 neurons, where signal can travel in both directions and just the middle neuron will have non-zero baseline potential.
+The previous network consisted of independent neurons with spontaneous spiking.
+Now we will add connections and make only one of the neurons spike spontaneously.
+We will form a chain of 10 neurons, where signal can travel in both directions
+and just the middle neuron will have non-zero baseline potential.
 
-Run the provided script and see how the signal spreads from the spiking neuron. Play around with tau parameter to see how it influences the system.
+Run the provided script and see how the signal spreads from the spiking neuron.
+Play around with the tau parameter to see how it influences the system.
 
-Then return tau back to `tau = 10*ms`, disable the right-to-left connections (`S.connect(condition='j == i-1 and i > 0')`), and set the non-zero
-baseline potential for the first neuron instead of the middle one.
-Run the simulation. How far does the signal travel, which neuron in the chain is the most distant one to spike?
+Then return tau back to tau = 10*ms, disable the right-to-left connections
+(S.connect(condition='j == i-1 and i > 0')), and set the non-zero baseline
+potential for the first neuron instead of the middle one.
+Run the simulation. How far does the signal travel? Which neuron in the chain
+is the most distant one to spike?
 
-Now play with the connection strength weight `w`, explore values (0.9 - 1.1). How does the spiking behaviour change?
+Task 2: Connection strength
+Now play with the connection strength weight w, explore values (0.9 - 1.1).
+How does the spiking behaviour change?
 
-Set weights back to `w = 1.0` and start decreasing the refractory period from `5*ms` down to `1*ms`. How far does the signal spread for `1*ms` refractory period?
-'''
+Task 3: Refractory period
+Set weights back to w = 1.0 and start decreasing the refractory period from
+5*ms down to 1*ms. How far does the signal spread for 1*ms refractory period?
+"""
 
-
-from brian2 import * # get by `pip install brian2`
+from brian2 import *  # get by `pip install brian2`
 import matplotlib
 matplotlib.use('TkAgg')  # or 'Qt5Agg'
 import matplotlib.pyplot as plt
-import time
 
 
 def animate_signal_transfer(VM, N):
@@ -45,47 +52,51 @@ def animate_signal_transfer(VM, N):
         ax.set_ylabel('Membrane potential')
         ax.set_title(f't = {VM.t[frame]/ms:.1f} ms')
         ax.legend()
-        plt.pause(0.01)  # Renders the frame and yields control briefly — this is the key line
+        plt.pause(0.01)
 
-start_scope() # Start a new Brian2 simulation scope to reset any previous settings
 
-N = 10  # Total number of neurons
-tau = 10 * ms  # Time constant (in milliseconds) determining how quickly the membrane potential responds
-duration = 120 * ms  # Set the total duration of the simulation (in milliseconds)
+start_scope()  # Start a new Brian2 simulation scope to reset any previous settings
 
-# Define the differential equation governing the dynamics of the neuron membrane potential (v)
+N = 10          # Total number of neurons
+tau = 10 * ms   # Time constant determining how quickly the membrane potential responds
+duration = 120 * ms  # Total duration of the simulation
+
+# Define the differential equation governing the neuron membrane potential dynamics
 eqs = '''
-dv/dt = (v0 - v) / tau : 1 (unless refractory)  # Membrane potential dynamics
-v0 : 1  # Baseline membrane potential for each neuron
+dv/dt = (v0 - v) / tau : 1 (unless refractory)
+v0 : 1
 '''
 
-# Create a group of neurons (NeuronGroup) with 'N' neurons using the specified dynamics equations
-G = NeuronGroup(N, eqs, threshold='v > 1', reset='v = 0', refractory= 5 * ms, method='euler')
-M = SpikeMonitor(G) # Create a SpikeMonitor to record the spiking activity of the neurons in the group 'G'
-VM = StateMonitor(G, 'v', record=True)  # record all neurons
+# Create a group of N neurons
+G = NeuronGroup(N, eqs, threshold='v > 1', reset='v = 0', refractory=5 * ms, method='euler')
 
-G.v0 = 0 # Initialize the baseline membrane potential (v0) for all neurons to 0 (no spontaneous spiking)
-# Set the first neuron (index 0) to have a v0 > 1 so it spikes continuously on its own
-# and propagates its activity down the chain
+# Monitors
+M = SpikeMonitor(G)           # Record spike times and neuron indices
+VM = StateMonitor(G, 'v', record=True)  # Record membrane potential for all neurons
 
-S = Synapses(G, G, model='w : 1', on_pre='v_post += w')
-S.connect(condition='j == i+1 and i < N_pre-1')
-S.connect(condition='j == i-1 and i > 0')  # bidirectional
-S.w = 1.0
+# Initialize all baseline potentials to 0 (no spontaneous spiking)
+G.v0 = 0
 
-# 1. Set the non-zero baseline potential for the middle neuron to trigger the spiking activity
+# Set the middle neuron (index 4) to have v0 > 1 so it spikes spontaneously
+# and propagates its activity in both directions along the chain
 G.v0[4] = 2.0
 
-# 2. Run the simulation
-run(duration)
-animate_signal_transfer(VM, N)
+# Define synapses with weight w
+S = Synapses(G, G, model='w : 1', on_pre='v_post += w')
+S.connect(condition='j == i+1 and i < N_pre-1')  # left-to-right connections
+S.connect(condition='j == i-1 and i > 0')         # right-to-left connections (bidirectional)
+S.w = 1.0
 
+# Run the simulation
+run(duration)
+
+# Animate membrane potential propagation
+animate_signal_transfer(VM, N)
 
 # Plot spiking activity
 figure(figsize=(12, 4))
-plot( M.i, M.t / ms, '.k')  # Plot spike times (M.t) against neuron indices (M.i) as black dots
-xlabel('Neuron index')  # Label the y-axis as "Neuron index"
-ylabel('Time (ms)')  # Label the x-axis as "Time (ms)"
+plot(M.t / ms, M.i, '.k')  # spike time on x-axis, neuron index on y-axis
+xlabel('Time (ms)')
+ylabel('Neuron index')
 title('Spiking Activity of Neurons')
-# Display the plots
-plt.show()
+plt.show(block=True)
