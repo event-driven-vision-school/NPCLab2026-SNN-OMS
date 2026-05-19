@@ -38,8 +38,9 @@ time = np.arange(0, T, dt)
 I_ext_amp = 1.0
 I_ext = np.zeros_like(time)
 pulse_times = [5, 60]
+pulse_duration=10
 for t in pulse_times:
-    I_ext[int(t/dt):int((t+10)/dt)] = I_ext_amp
+    I_ext[int(t/dt):int((t+pulse_duration)/dt)] = I_ext_amp
 
 # Initialize membrane potential
 V = np.zeros_like(time)

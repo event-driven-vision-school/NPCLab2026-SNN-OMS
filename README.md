@@ -102,11 +102,11 @@ If V ≥ V_threshold  →  spike emitted, V reset to V_rest
 
 | Parameter | Symbol | Typical Value | Description |
 |---|---|---|---|
-| Membrane capacitance | `Cm` | 100 pF | Capacity to store charge |
-| Leak conductance | `gL` | 10 nS | Rate of passive voltage decay |
-| Resting potential | `V_rest` | −70 mV | Equilibrium in absence of input |
-| Threshold | `V_th` | −50 mV | Voltage at which a spike is emitted |
-| Reset potential | `V_reset` | −70 mV | Voltage after spike |
+| Membrane capacitance | `Cm` | 0.74 | Capacity to store charge |
+| Leak conductance | `gL` | 0.1 | Rate of passive voltage decay |
+| Resting potential | `VL` | −65 mV | Equilibrium in absence of input |
+| Threshold | `VT` | −50 mV | Voltage at which a spike is emitted |
+| Reset potential | `VR` | −67 mV | Voltage after spike |
 | Membrane time constant | `τ_m` | `Cm / gL` | Timescale of integration and leak |
 
 
@@ -118,25 +118,21 @@ Modify the LIF parameters `Cm`, `gL`, or `VT` and observe how the membrane poten
 
 **Task 2 — Find the minimum firing current**
 
-Now consider a constant current $I_{ext}$ instead of the pulsed input. Find the minimal constant current $I_{min}$ which causes the neuron to fire at least once.
+Now consider the pulse current $I_{ext_{amp}}$. Find the minimal current $I_{ext_{amp}}$ which causes the neuron to fire at least once.
 
-The LIF equation under constant input is:
-
-$$\tau_m \frac{dV(t)}{dt} = (V_L - V(t)) + R_m \cdot I_{ext}$$
-
-> **Hint:** Increase $I_ext_amp$ until the neuron fires and report all the other parameters.
+> **Hint:** Increase $I_{ext_{amp}}$ until the neuron fires.
 
 ```python
-# TODO: solve for I_min here
 I_min = None
-print(f"Minimum input current required to reach threshold: {I_min:.2f} uA")
+if I_min is not None:
+    print(f"Minimum input current required to reach threshold: {I_min:.2f} uA")
 ```
 
 ### Questions
 
-1. What is the minimal constant current $I_{min}$ which causes the neuron to fire at least once?
-2. How does changing the amplitude and duration of the input current pulses affect the firing behaviour? Try halving and doubling both values.
-3. What happens when you modify `Cm`, `gL`, or `V_th`? For each parameter, predict the effect before running the simulation, then verify.
+1. What is the minimal pulse current $I_{ext_{amp}}$ which causes the neuron to fire at least once?
+2. How does changing the amplitude and duration of the input current pulses (`pulse_duration`) affect the firing behaviour? Try halving and doubling both values.
+3. What happens when you modify `Cm`, `gL`, or `VT`? For each parameter, predict the effect before running the simulation, then verify.
 
 ---
 
