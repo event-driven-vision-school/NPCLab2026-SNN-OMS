@@ -43,12 +43,12 @@ inspired **Object Motion Sensitivity (OMS)** SNN model.
 ## Tutorial Overview
 
 ```
-Tutorial 1A    LIF neuron — membrane dynamics and spike generation
-Tutorial 2    LIF neuron with refractory period
-Tutorial 3     Spiking Neural Networks (Brian2)
+Tutorial 1     LIF neuron — membrane dynamics and spike generation
+Tutorial 2     LIF neuron with refractory period
+Tutorial 3A    Spiking Neural Networks -> spontaneous activity (Brian2)
+Tutorial 3B    Spiking Neural Networks -> signal propagation (Brian2)
 Tutorial 4     Object Motion Sensitivity (OMS) model
 ```
-
 
 ---
 
@@ -181,8 +181,6 @@ firing_rate_r = None
 print(f"Difference in firing rates: {firing_rate[-1] - firing_rate_r[-1]} spikes/sec at I_ext = 18 uA.")
 ```
 
-
-
 ### Questions
 
 1. What is the difference in spike rate with and without refractory period for $I_{ext} = 18\ \mu A$?
@@ -195,7 +193,7 @@ print(f"Difference in firing rates: {firing_rate[-1] - firing_rate_r[-1]} spikes
 
 This tutorial introduces **network-level** spiking dynamics using the **Brian2** simulator. A population of 100 independent LIF neurons is simulated, each with a different baseline membrane potential, and their spiking activity and firing rates are visualised.
 
-> 💡 **Key concept:** Some biological neurons fire spontaneously without external input — for example, brainstem neurons that drive breathing. This intrinsic excitability is modelled via the baseline membrane potential `v0`: the higher it is, the more often the neuron fires on its own.
+> **Key concept:** Some biological neurons fire spontaneously without external input — for example, brainstem neurons that drive breathing. This intrinsic excitability is modelled via the baseline membrane potential `v0`: the higher it is, the more often the neuron fires on its own.
 
 ### Exercise
 
@@ -205,45 +203,34 @@ Run the simulation and observe at which times each neuron fires and how the base
 
 Then adjust the `tau` parameter and observe how the activity changes for:
 
-```
-tau = 2.0 ms
-tau = 10.0 ms
-tau = 50.0 ms
+```python
+tau = 2.0 * ms
+tau = 10.0 * ms
+tau = 50.0 * ms
 ```
 
 ### Questions
 
 1. Which neurons fire most frequently and why?
 2. How does increasing `tau` affect the firing rate across the population?
-3. What is the relationship between `v0` and firing rate — is it linear?
-
+3. What is the relationship between `v0` and firing rate, is it linear?
 
 ## Tutorial 3B — Spiking Neural Networks (Brian2)
 
 **Script:** [`Tutorial3B-SNN.py`](Tutorial3B-SNN.py)
 
-This tutorial introduces **network-level** 
-spiking dynamics using the **Brian2** simulator. 
-A chain of 10 LIF neurons is connected via synapses, 
-and signal propagation is visualised in real time. 
-Only one neuron fires spontaneously, the rest respond only through synaptic input.
+This tutorial introduces **network-level** spiking dynamics using the **Brian2** simulator. A chain of 10 LIF neurons is connected via synapses, and signal propagation is visualised in real time. Only one neuron fires spontaneously — the rest respond only through synaptic input.
 
-> 💡 **Key concept:** Real neural computation emerges at 
-> the *network* level. This tutorial demonstrates how a 
-> spike initiated by a single neuron propagates through a
-> chain, and how synaptic strength, connection direction, 
-> and refractory period all shape that propagation.
+> **Key concept:** Real neural computation emerges at the *network* level. This tutorial demonstrates how a spike initiated by a single neuron propagates through a chain, and how synaptic strength, connection direction, and refractory period all shape that propagation.
 
-### Exercise
+### Exercises
 
 **Task 1 — Observe signal propagation**
 
-Run the script and observe how the spike initiated by the middle 
-neuron spreads in both directions along the chain. 
-Play with the `tau` parameter and observe how it influences the system.
+Run the script and observe how the spike initiated by the middle neuron spreads in both directions along the chain. Play with the `tau` parameter and observe how it influences the system.
 
 Then:
-- Set `tau = 10*ms`
+- Set `tau = 10 * ms`
 - Disable right-to-left connections by removing `S.connect(condition='j == i-1 and i > 0')`
 - Move the non-zero baseline potential to the **first neuron** instead of the middle one
 
@@ -251,20 +238,17 @@ How far does the signal travel? Which is the most distant neuron to spike?
 
 **Task 2 — Explore connection strength**
 
-With the unidirectional chain from Task 1, 
-explore weight values in the range $[0.9, 1.1]$. 
-How does spiking behaviour change?
+With the unidirectional chain from Task 1, explore weight values in the range $[0.9, 1.1]$. How does spiking behaviour change?
 
 **Task 3 — Explore the refractory period**
 
-Set weights back to `w = 1.0` and decrease the refractory period from `5*ms` down to `1*ms`. How far does the signal spread for `1*ms`?
+Set weights back to `w = 1.0` and decrease the refractory period from `5 * ms` down to `1 * ms`. How far does the signal spread for `1 * ms`?
 
 ### Questions
 
 1. How far does the signal travel when connections are unidirectional and the first neuron drives the chain?
 2. What happens to signal propagation when `w < 1.0`? And when `w > 1.0`?
-3. How far does the signal spread with a refractory period of `1*ms`?
-
+3. How far does the signal spread with a refractory period of `1 * ms`?
 
 ## Tutorial 4 — Object Motion Sensitivity (OMS)
 
