@@ -13,6 +13,8 @@ Observe the membrane potential behaviour, its growth and the exponential leaky d
 potential value, when not stimulated. Notice the membrane potential dropping after crossing the firing threshold 
 back to the Reset voltage (VR) value before increasing again.
 """
+
+
 import numpy as np
 import matplotlib
 matplotlib.use('TkAgg')

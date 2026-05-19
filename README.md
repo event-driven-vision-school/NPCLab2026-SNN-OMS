@@ -109,11 +109,6 @@ If V ≥ V_threshold  →  spike emitted, V reset to V_rest
 | Reset potential | `V_reset` | −70 mV | Voltage after spike |
 | Membrane time constant | `τ_m` | `Cm / gL` | Timescale of integration and leak |
 
-### Questions
-
-1. Find the minimal constant current $I_{min}$ which causes the neuron to fire at least once. *(See Task 2 in the exercise above.)*
-2. How does changing the amplitude and duration of the input current pulses affect the firing behaviour? Try halving and doubling both values.
-3. What happens when you modify `Cm`, `gL`, or `V_th`? For each parameter, predict the effect before running the simulation, then verify. *(See Task 1 in the exercise above.)*
 
 ### Exercises
 
@@ -129,13 +124,20 @@ The LIF equation under constant input is:
 
 $$\tau_m \frac{dV(t)}{dt} = (V_L - V(t)) + R_m \cdot I_{ext}$$
 
-> 💡 **Hint:** At steady state $\frac{dV}{dt} = 0$. The spiking condition is $V = V_T$. Solve for $I_{ext}$.
+> **Hint:** At steady state $\frac{dV}{dt} = 0$. The spiking condition is $V = V_T$. Solve for $I_{ext}$.
 
 ```python
 # TODO: solve for I_min here
 I_min = None
 print(f"Minimum input current required to reach threshold: {I_min:.2f} uA")
 ```
+
+### Questions
+
+1. What is the minimal constant current $I_{min}$ which causes the neuron to fire at least once?
+2. How does changing the amplitude and duration of the input current pulses affect the firing behaviour? Try halving and doubling both values.
+3. What happens when you modify `Cm`, `gL`, or `V_th`? For each parameter, predict the effect before running the simulation, then verify.
+
 ---
 
 ## Tutorial 2 — The LIF Neuron with Refractory Period
