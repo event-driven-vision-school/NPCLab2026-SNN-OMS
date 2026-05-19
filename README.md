@@ -124,7 +124,7 @@ The LIF equation under constant input is:
 
 $$\tau_m \frac{dV(t)}{dt} = (V_L - V(t)) + R_m \cdot I_{ext}$$
 
-> **Hint:** At steady state $\frac{dV}{dt} = 0$. The spiking condition is $V = V_T$. Solve for $I_{ext}$.
+> **Hint:** Increase $I_ext_amp$ until the neuron fires and report all the other parameters.
 
 ```python
 # TODO: solve for I_min here
