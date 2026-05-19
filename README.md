@@ -138,7 +138,7 @@ if I_min is not None:
 
 ## Tutorial 2 — The LIF Neuron with Refractory Period
 
-**Script:** [`Tutorial2-NeuronRefractory`](Tutorial2-NeuronRefractory.py)
+**Script:** [`Tutorial2-NeuronRefractory.py`](Tutorial2-NeuronRefractory.py)
 
 This tutorial extends the LIF model by introducing 
 the **refractory period**, the brief interval after a 
@@ -146,7 +146,7 @@ spike during which a neuron cannot fire again, regardless of input.
 This is a fundamental biological constraint that shapes neural 
 coding and network dynamics.
 
-> 💡 **Key concept:** After a spike, 
+> **Key concept:** After a spike, 
 > biological neurons enter a refractory
 > state due to ion channel dynamics. 
 > During the **absolute refractory period**, 
@@ -157,31 +157,37 @@ coding and network dynamics.
 
 **Task 1 — Observe the refractory period**
 
-Run the script and compare the membrane potential and spike trains of the neuron with and without refractory period. 
-What do you notice about the firing rate?
+Run the script and compare the membrane potential and spike trains of the neuron with and without refractory period (`t_ref = 2.0 ms`). What do you notice about the firing rate?
 
 **Task 2 — Explore the firing rate vs. input current**
 
-Adapt the code to feed the neuron a constant external 
-current $I_{ext}$. Use 10 equidistant values 
-from $[I_{min}, 18]\ \mu A$, where $I_{min}$ is your result from
-Tutorial 1. 
-For each current value, compute the firing rate 
-(spikes/sec) for both scenarios and plot them against $I_{ext}$.
+Adapt the code to feed the neuron a constant external current $I_{ext}$. Use 10 equidistant values from $[I_{min}, 18]\ \mu A$, where $I_{min}$ is your result from Tutorial 1. For each current value, compute the firing rate (spikes/sec) for both scenarios and plot them against $I_{ext}$.
+
+> **Hint:** Wrap the simulation in a `for` loop over `I_values = np.linspace(I_min, 18, 10)`. To simulate with constant current, replace the pulsed `I_ext` with `np.full_like(time, I_ext_amp)`. Then reuse the simulation loop from Task 1 twice, once without refractory and once with, and count the spikes for each run. Divide the spike count by `T / 1000` to get the firing rate in spikes/sec.
+
 
 ```python
-# TODO
+# TODO: set I_min from your result in Tutorial 1
+I_min = None
+
+# TODO: define 10 equidistant current values from I_min to 18
+I_values = None  # np.linspace(I_min, 18, 10)
+
+# TODO: for each current value simulate with and without refractory period
+#       and compute firing rate (spikes/sec) for both cases
 firing_rate = None
 firing_rate_r = None
+
 print(f"Difference in firing rates: {firing_rate[-1] - firing_rate_r[-1]} spikes/sec at I_ext = 18 uA.")
 ```
+
+
 
 ### Questions
 
 1. What is the difference in spike rate with and without refractory period for $I_{ext} = 18\ \mu A$?
 2. How does increasing the refractory period duration $\tau_{ref}$ affect the maximum achievable firing rate?
 3. Can you find a current value where the refractory period prevents additional spikes that would otherwise occur?
-
 
 ## Tutorial 3A — Spiking Neural Networks (Brian2)
 
