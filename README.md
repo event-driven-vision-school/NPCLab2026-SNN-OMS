@@ -254,50 +254,64 @@ Set weights back to `w = 1.0` and decrease the refractory period from `5 * ms` d
 
 **Script:** [`Tutorial4-OMS.py`](Tutorial4-OMS.py)
 
-This tutorial implements an **Object Motion Sensitivity (OMS)** network, 
-a biologically inspired mechanism for motion segmentation directly 
-derived from the research of the NPC Lab. 
-The system analyses event-based frames using 
-centre-surround spatial kernels to detect local motion differences, 
+This tutorial implements an **Object Motion Sensitivity (OMS)** network,
+a biologically inspired mechanism for motion segmentation directly
+derived from the research of the NPC Lab.
+The system analyses event-based frames using
+centre-surround spatial kernels to detect local motion differences,
 producing a segmentation map comparable with ground-truth masks.
 
-> 💡 **Key concept:** OMS cells are modelled on retinal 
-> amacrine cells that respond selectively to 
+> **Key concept:** OMS cells are modelled on retinal
+> amacrine cells that respond selectively to
 > objects moving differently from their static background.
-> 
+>
 > This work is directly connected to [D'Angelo et al., 2025](https://doi.org/10.1088/2634-4386/addc90).
 
-📥 **Download data:** [Dropbox link](https://www.dropbox.com/scl/fo/g5j17yh6elrc61s66aiba/AO2lSvWa5oLlZYhc0V2CNkw?rlkey=w0hgpsbd2mjvbfp4vrtdm5bhe&st=hi09k9to&dl=0)
+**Download data:** [Dropbox link](https://www.dropbox.com/scl/fo/g5j17yh6elrc61s66aiba/AO2lSvWa5oLlZYhc0V2CNkw?rlkey=w0hgpsbd2mjvbfp4vrtdm5bhe&st=hi09k9to&dl=0)
 
 Place the data in `data/evimo/` before running the script.
 
-### Exercise
+### Exercises
 
-**Task 1 — Observe OMS segmentation**
+**Task 1 — Explore the OMS threshold**
 
-Run the script and observe the three panels: the input event frame, the ground-truth segmentation mask, and the OMS output. Press `ESC` to stop the visualisation at any time.
+Run the script and observe the three panels: the input event frame, the ground-truth segmentation mask, and the OMS output. Then vary the `threshold` parameter in `OMS_PARAMS` and observe how the segmentation changes:
+
+```python
+OMS_PARAMS = {
+    ...
+    'threshold': 0.86,  # try values between 0.5 and 1.0
+    ...
+}
+```
+
+What happens when the threshold is very low? What happens when it is very high?
 
 **Task 2 — Compute the OMS motion score**
 
 For a randomly selected frame, compute the percentage of pixels classified as motion by the OMS network:
 
 ```python
-# TODO: compute the motion ratio (%) for the selected frame index
+frame_idx = np.random.randint(len(evframesdata))
+threshold = config.OMS_PARAMS['threshold']
+
+# TODO: compute the OMS output for the selected frame
+# TODO: compute the percentage of motion pixels (OMS == 255)
 motion_ratio = None
+
 print(f"Frame index: {frame_idx}")
 print(f"Motion ratio (%): {motion_ratio:.2f}")
 ```
 
 **Task 3 — Explore OMS parameters**
 
-Vary the parameters in `OMS_PARAMS` (threshold, kernel sizes, sigma values) and observe how segmentation quality changes. Which parameters have the most impact?
+Vary the parameters in `OMS_PARAMS` (kernel sizes, sigma values) and observe how segmentation quality changes. Which parameters have the most impact?
 
 ### Questions
 
 1. How does the difference between centre and surround responses contribute to motion segmentation?
 2. How does the choice of `threshold` affect the OMS output — what happens at very low or very high values?
 3. Which `OMS_PARAMS` have the most impact on segmentation quality and why?
-
 ---
 
 ## Bonus — Live Demo: OMS on Neuromorphic Hardware

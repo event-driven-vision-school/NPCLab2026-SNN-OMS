@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """
-Tutorial 7 - OMS (Object Motion Sensitivity)
+Tutorial 4 - OMS (Object Motion Sensitivity)
+
+Giulia D'Angelo, giulia.dangelo@fel.cvut.cz
+Sarka Liskova, sarka.liskova@fel.cvut.cz
+Paolo Ritirato, paolo.ritirato@fel.cvut.cz
 
 This tutorial demonstrates an SNN object motion segmentation system using
 neuromorphic vision processing techniques.
 
-The system employs **Optimized Motion Sensitivity (OMS)** cells to analyze
+The system employs Object Motion Sensitivity (OMS) cells to analyze
 event-based frames and generate motion segmentation. The tutorial covers key
 steps including kernel generation, neural network initialization, and the
 processing pipeline to detect local motion differences between center and
@@ -15,8 +19,7 @@ Structure:
 1. Define configuration, Gaussian kernels, and OMS networks.
 2. Load EVIMO data (frames + masks).
 3. Run dynamic visualization using matplotlib.
-
-Authors: Giulia D'Angelo, giulia.dangelo@fel.cvut.cz
+4. Exercise: compute OMS motion score.
 """
 
 # ============================================================================
@@ -30,7 +33,7 @@ import torch.nn as nn
 import sinabs.layers as sl
 import matplotlib
 
-matplotlib.use('TkAgg')  # Set the backend for Matplotlib to TkAgg
+matplotlib.use('TkAgg')
 
 
 # Global OMS configuration and execution device.
@@ -59,12 +62,12 @@ class Config:
 # - Center/surround Gaussian kernel generation.
 # - Spiking branch architecture using Conv2d + LIF.
 #
-# The `egomotion(...)` function returns a binary OMS map that highlights
+# The egomotion() function returns a binary OMS map that highlights
 # salient motion areas.
 
 def egomotion(window, net_center, net_surround, device, max_y, max_x, threshold):
     """
-    Compute the OMS (Optimized Motion Sensitivity) output for an event frame.
+    Compute the OMS (Object Motion Sensitivity) output for an event frame.
 
     Args:
         window: Input event frame tensor
@@ -114,7 +117,6 @@ def initialize_oms(device, oms_params):
         net_center: Center pathway network
         net_surround: Surround pathway network
     """
-    # Build center/surround kernels and initialize both OMS branches.
     center, surround = OMSkernels(
         oms_params['size_krn_center'], oms_params['sigma_center'],
         oms_params['size_krn_surround'], oms_params['sigma_surround']
@@ -173,7 +175,6 @@ def net_def(filter_kernel, tau_mem, in_ch, out_ch, size_krn, device, stride):
     Returns:
         Sequential network module
     """
-    # Each OMS branch is a fixed convolution followed by a spiking LIF neuron.
     net = nn.Sequential(
         nn.Conv2d(in_ch, out_ch, (size_krn, size_krn), stride=stride, bias=False),
         sl.LIF(tau_mem),
@@ -186,12 +187,9 @@ def net_def(filter_kernel, tau_mem, in_ch, out_ch, size_krn, device, stride):
 # ============================================================================
 # 3. Data Loading and Network Initialization
 # ============================================================================
-# Load EVIMO event frames and segmentation masks, then initialize the OMS
-# center/surround networks.
-# The printed summary helps verify dataset size and selected device (mps or cpu).
 
 print("=" * 80)
-print("Tutorial 7 - OMS (Object Motion Sensitivity)")
+print("Tutorial 4 - OMS (Object Motion Sensitivity)")
 print("=" * 80)
 print("\nLoading data and initializing networks...\n")
 
@@ -215,6 +213,7 @@ print(f'Loaded frames: {len(evframesdata)}')
 print(f'Loaded masks: {len(evmaskdata)}')
 print(f'Device: {config.DEVICE}')
 
+
 # ============================================================================
 # 4. Dynamic Visualization
 # ============================================================================
@@ -228,12 +227,11 @@ print("Dynamic Visualization")
 print("=" * 80)
 print("\nProcessing and visualizing frames...\n")
 
-DISPLAY_MODE = "window"  # Interactive window mode for visualization
+DISPLAY_MODE = "window"
 
 fig, axs = plt.subplots(1, 3, figsize=(15, 5))
 fig.suptitle('OMS Object Motion Segmentation Visualization')
 
-# Flag to track if escape key was pressed
 escape_pressed = {'flag': False}
 
 
@@ -245,7 +243,6 @@ def on_key_press(event):
         plt.close(fig)
 
 
-# Connect the key press event to the figure
 fig.canvas.mpl_connect('key_press_event', on_key_press)
 
 
@@ -259,7 +256,6 @@ def process_events(display_mode=DISPLAY_MODE, pause_s=0.03):
     """
     frame_count = 0
     for i, evframe in enumerate(evframesdata):
-        # Check if escape was pressed
         if escape_pressed['flag']:
             break
 
@@ -274,7 +270,6 @@ def process_events(display_mode=DISPLAY_MODE, pause_s=0.03):
             config.OMS_PARAMS['threshold']
         )
 
-        # Refresh subplot content at each frame.
         axs[0].cla()
         axs[1].cla()
         axs[2].cla()
@@ -295,7 +290,6 @@ def process_events(display_mode=DISPLAY_MODE, pause_s=0.03):
         fig.suptitle(f'OMS Visualization - Frame {i + 1}/{len(evframesdata)} (Press ESC to stop)')
 
         if display_mode == "window":
-            # Update the external interactive window.
             fig.canvas.draw_idle()
             fig.canvas.flush_events()
 
@@ -311,6 +305,7 @@ def process_events(display_mode=DISPLAY_MODE, pause_s=0.03):
 process_events()
 plt.show()
 
+
 # ============================================================================
 # 5. Exercise: Compute OMS Motion Score
 # ============================================================================
@@ -323,11 +318,11 @@ print("\n" + "=" * 80)
 print("Exercise: OMS Motion Score Calculation")
 print("=" * 80 + "\n")
 
-# Reference solution
 frame_idx = np.random.randint(len(evframesdata))
 threshold = config.OMS_PARAMS['threshold']
 
-# 3) Compute the percentage of motion pixels (OMS == 255).
+# TODO: compute the OMS output for the selected frame
+# TODO: compute the percentage of motion pixels (OMS == 255)
 motion_ratio = None
 
 if motion_ratio is None:
@@ -336,27 +331,27 @@ if motion_ratio is None:
 print(f"Frame index: {frame_idx}")
 print(f"Motion ratio (%): {motion_ratio:.2f}")
 
-# Simple sanity check: result must be a valid percentage.
 assert 0.0 <= motion_ratio <= 100.0, "motion_ratio must be in [0, 100]"
 
+
 # ============================================================================
-# 6. Analysis and Questions
+# 6. Questions
 # ============================================================================
 
 print("\n" + "=" * 80)
 print("Questions for Further Exploration:")
 print("=" * 80)
 print("""
-1. How does the difference between center and surround responses contribute 
+1. How does the difference between center and surround responses contribute
    to motion segmentation in the OMS network?
 
-2. Why is it important to normalize the Gaussian kernels in the gaussian_kernel 
-   function, and how does this affect the processing of event-based frames?
+2. How does the choice of threshold affect the OMS output — what happens
+   at very low or very high values?
 
-3. Try varying the OMS_PARAMS (threshold, kernel sizes, sigma values) and observe 
+3. Try varying the OMS_PARAMS (threshold, kernel sizes, sigma values) and observe
    how the segmentation quality changes. Which parameters have the most impact?
 """)
 
 print("=" * 80)
-print("Tutorial 7 completed!")
+print("Tutorial 4 completed!")
 print("=" * 80)
