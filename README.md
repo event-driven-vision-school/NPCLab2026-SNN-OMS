@@ -324,6 +324,10 @@ Vary the parameters in `OMS_PARAMS` (kernel sizes, sigma values) and observe how
 
 ## Bonus — Live Demo: OMS on Neuromorphic Hardware
 
+<p align="center">
+  <img src="images/NPClab.png" alt="NPC Lab Logo" width="200"/>
+</p>
+
 For a live demonstration of the OMS pipeline deployed on the
 **SynSense Speck2f** neuromorphic chip, see the companion repository:
 
