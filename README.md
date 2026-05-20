@@ -1,6 +1,10 @@
 
 # NPC Lab for the Event-Driven Vision School 2026 
 
+<p align="center">
+  <img src="images/NPClab.png" alt="NPC Lab Logo" width="200"/>
+</p>
+
 ### Neuro-inspired Perception and Cognition (NPC) Lab — Czech Technical University in Prague
 
 This tutorial series is part of the teaching activities of the [**Neuroinspired Perception and Cognition (NPC) Lab**](https://giuliadangelo.github.io/html/npclab.html) at the 
@@ -15,6 +19,10 @@ These tutorials are designed and developed by the NPC Lab team:
 - Sarka Liskova (sarka.liskova@fel.cvut.cz) (PhD student)
 - Paolo Ritirato (paolo.ritirato@fel.cvut.cz) (PhD student)
 
+
+<p align="center">
+  <img src="images/npcteam.png" alt="NPC Lab" width="600"/>
+</p>
 
 ## Introduction
 
@@ -315,6 +323,10 @@ Vary the parameters in `OMS_PARAMS` (kernel sizes, sigma values) and observe how
 ---
 
 ## Bonus — Live Demo: OMS on Neuromorphic Hardware
+
+<p align="center">
+  <img src="images/NPClab.png" alt="NPC Lab Logo" width="200"/>
+</p>
 
 For a live demonstration of the OMS pipeline deployed on the
 **SynSense Speck2f** neuromorphic chip, see the companion repository:
